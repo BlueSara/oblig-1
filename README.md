@@ -19,6 +19,44 @@ This endpoint returns general details about a country, such as its name, capital
 /info/no?limit=10
 ```
 
+This will give the following json:
+```bash
+"name": {
+        "common": "Norway"
+    },
+    "continents": [
+        "Europe"
+    ],
+    "population": 5379475,
+    "languages": {
+        "nno": "Norwegian Nynorsk",
+        "nob": "Norwegian Bokmål",
+        "smi": "Sami"
+    },
+    "borders": [
+        "FIN",
+        "SWE",
+        "RUS"
+    ],
+    "flag": "🇳🇴",
+    "capital": [
+        "Oslo"
+    ],
+    "cities": [
+        "Abelvaer",
+        "Adalsbruk",
+        "Adland",
+        "Agdenes",
+        "Agotnes",
+        "Agskardet",
+        "Aker",
+        "Akkarfjord",
+        "Akrehamn",
+        "Al"
+    ]
+}
+```
+
 
 ### Get Population Data
 
