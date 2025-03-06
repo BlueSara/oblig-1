@@ -1,8 +1,10 @@
 #  Oblig_1 - Country Info API  
 
-Welcome to the **Oblig_1 Country Info API!** This API helps you fetch interesting details about countries, including general info, population statistics, and API health status. No passport required! ✈️  
+Welcome to my **Oblig_1**
+This API helps you fetch details about countries, including general info, population statistics, and API health status.
 
 ---
+
 
 ##  Endpoints  
 
@@ -17,6 +19,7 @@ This endpoint returns general details about a country, such as its name, capital
 /info/no?limit=10
 ```
 
+
 ### Get Population Data
 
 **GET** `/population/{ISO2-country_code}?limit="startYear-endYear"`
@@ -30,6 +33,7 @@ Curious about how a country's population has changed over time? This endpoint pr
 /population/no?limit=2010-2020
 ```
 This will return population data for Norway 📈 from 2010 to 2020.
+
 
 
 ### Check API Status
