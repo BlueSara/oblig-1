@@ -32,7 +32,7 @@ Curious about how a country's population has changed over time? This endpoint pr
 ```bash
 /population/no?limit=2010-2020
 ```
-This will return population data for Norway 📈 from 2010 to 2020.
+This will return population data for Norway from 2010 to 2020.
 
 
 
@@ -45,7 +45,7 @@ Example Request:
 ```bash
 /status
 ```
-If all systems are go, you'll receive a response confirming the API is operational.
+If all systems are good, you'll receive a response confirming the API is operational.
 
 
 
