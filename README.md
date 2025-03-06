@@ -10,7 +10,7 @@ Welcome to the **Oblig_1 Country Info API!** This API helps you fetch interestin
 **GET** `/info/{ISO2-country_code}?limit=integer`  
 This endpoint returns general details about a country, such as its name, capital, and more!  
 
-🔹 **Limit** is optional – if provided, it specifies the number of cities included in the response.  
+**Limit** is optional – if provided, it specifies the number of cities included in the response.  
 
 ####  Example Request:  
 ```bash
@@ -19,7 +19,7 @@ This endpoint returns general details about a country, such as its name, capital
 
 ### Get Population Data
 
-**GET** /population/{ISO2-country_code}?limit="startYear-endYear"
+**GET** `/population/{ISO2-country_code}?limit="startYear-endYear"`
 Curious about how a country's population has changed over time? This endpoint provides population statistics for the given time range!
 
 - Limit is optional – specify a start year and an end year to filter the results.
@@ -34,7 +34,7 @@ This will return population data for Norway 📈 from 2010 to 2020.
 
 ### Check API Status
 
-**GET** /status
+**GET** `/status`
 Wondering if everything is running smoothly? This endpoint lets you check the health of the API we are fetching from!
 Example Request:
 
