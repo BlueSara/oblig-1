@@ -22,7 +22,8 @@ Retrieves general country information using a two-letter country code (ISO2).
 
 Example Request:
 
-curl -X GET http://localhost:8080/countryinfo/v1/info/NO
+```curl -X GET http://localhost:8080/countryinfo/v1/info/NO
+
 
 ## 2. Get Population Data
 
