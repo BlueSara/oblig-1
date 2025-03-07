@@ -61,7 +61,7 @@ func HandlerPopulation(w http.ResponseWriter, r *http.Request) {
 		} else {
 			years := strings.Split(limit, "-") //Expecting format: XXXX-YYYY
 			if len(years) != 2 {               //We limit the array (that gets created in string.split) to 2
-				http.Error(w, "Invalid input for limit. Use ?limit=XXXX-YYYY", http.StatusBadRequest)
+				http.Error(w, "Invalid input for limit"+LINEBREAK+"Use `?limit=XXXX-YYYY`", http.StatusBadRequest)
 				return
 			}
 			// Parse the start year from string to int
@@ -113,8 +113,8 @@ func GETPopulation(w http.ResponseWriter, iso3 string, start int, end int, final
 	payloadData := map[string]string{"iso3": iso3} //Preparing a map with a single key set as iso3
 	payloadBytes, err := json.Marshal(payloadData) //Converts payloadData map into a JSON slice
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 	//makes payload readable to use as the request body
 	payload := strings.NewReader(string(payloadBytes))
@@ -126,16 +126,16 @@ func GETPopulation(w http.ResponseWriter, iso3 string, start int, end int, final
 	// Create a POST request to fetch population data
 	req, err := http.NewRequest("POST", popURL, payload)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	//Execute the request
 	resp, err := client.Do(req)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 
 	defer func(Body io.ReadCloser) { //another defer to make sure the body closes when function ends
@@ -147,23 +147,23 @@ func GETPopulation(w http.ResponseWriter, iso3 string, start int, end int, final
 
 	// Check if API returned an error
 	if resp.StatusCode != http.StatusOK {
-		http.Error(w, fmt.Sprintf("API error: %s", resp.Status), resp.StatusCode)
-		return errors.New("OPS")
+		http.Error(w, fmt.Sprintf("API error %s", resp.Status), resp.StatusCode)
+		return errors.New("")
 	}
 
 	// Read the response
 	body, errRead := io.ReadAll(resp.Body)
 	if errRead != nil {
-		http.Error(w, errRead.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 
 	//Parse the JSON response into the temporary population struct
 	var populationData PopulationTemp
 	errJSONs := json.Unmarshal(body, &populationData)
 	if errJSONs != nil {
-		http.Error(w, errJSONs.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 
 	//Iterate through population data and filter by the given year range.
@@ -202,26 +202,26 @@ func ConvertISO(w http.ResponseWriter, iso string) (string, error) {
 	req, errREQ := http.NewRequest("GET", isoURL, nil)
 	if errREQ != nil {
 		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
-		return "", errors.New("OPS")
+		return "", errors.New("")
 	}
 
 	//Execute the request!
 	res, errDO := client.Do(req)
 	if errDO != nil {
-		http.Error(w, errDO.Error(), http.StatusInternalServerError)
-		return "", errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return "", errors.New("")
 	}
 	//Handle case where the given iso2 code doesn't exist
 	if res.StatusCode == http.StatusNotFound {
 		http.Error(w, "Sorry dude, or dudette. But your iso code is very very bad! Because it doesnt exist!"+LINEBREAK+"TRY AGAIN", http.StatusNotFound)
-		return "", errors.New("OPS")
+		return "", errors.New("")
 	}
 
 	//Read the API response
 	body, errRead := io.ReadAll(res.Body)
 	if errRead != nil {
-		http.Error(w, errRead.Error(), http.StatusInternalServerError)
-		return "", errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return "", errors.New("")
 	}
 
 	defer func(Body io.ReadCloser) { //defer to make sure it closes when function ends
@@ -234,8 +234,8 @@ func ConvertISO(w http.ResponseWriter, iso string) (string, error) {
 	var convData Conv
 	errJSON := json.Unmarshal(body, &convData)
 	if errJSON != nil {
-		http.Error(w, errJSON.Error(), http.StatusInternalServerError)
-		return "", errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return "", errors.New("")
 	}
 	//returns the converted iso3 country code
 	return convData.Iso3, nil
