@@ -11,7 +11,7 @@ import (
 func main() {
 
 	// Port for server. Default is 8080, cuz why not
-	port := ":8080"
+	port := "8080"
 
 	// if someone (like cloud host) say "use this port," we listen
 	if os.Getenv("PORT") != "" {
