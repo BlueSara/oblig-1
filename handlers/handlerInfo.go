@@ -39,7 +39,7 @@ func HandlerInfo(w http.ResponseWriter, r *http.Request) {
 	//iso - for the two-letter-country-code
 	iso := r.PathValue("two_letter_country_code")
 	if len(iso) != 2 { //Restricting to only 2 letters
-		http.Error(w, "Invalid ISO", http.StatusBadRequest)
+		http.Error(w, "Invalid iso. Have to be a two letter iso (country code)", http.StatusBadRequest)
 		return
 	}
 	//Fetch country details and store them in country struct
@@ -78,7 +78,7 @@ func HandlerInfo(w http.ResponseWriter, r *http.Request) {
 	//Encode the final country struct as JSON, sending the response to my API =)
 	errJsn := json.NewEncoder(w).Encode(country)
 	if errJsn != nil {
-		http.Error(w, errJsn.Error(), http.StatusInternalServerError)
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
 		return
 	}
 }
@@ -101,25 +101,25 @@ func GetCountry(w http.ResponseWriter, r *http.Request, iso string, c *GETCountr
 		req, errREQ := http.NewRequest("GET", everythingURL, nil)
 		if errREQ != nil {
 			http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
-			return errors.New("OPS")
+			return errors.New("")
 		}
 
 		//Sending the request and receive the response
 		res, errDO := client.Do(req)
 		if errDO != nil {
 			http.Error(w, errDO.Error(), http.StatusInternalServerError)
-			return errors.New("OPS 2x")
+			return errors.New("")
 		}
 		//If the API responds with 404, the iso input probably doesn't exist
 		if res.StatusCode == http.StatusNotFound {
 			http.Error(w, "Sorry dude, or dudette. But your iso code is very very bad! Because it doesnt exist!"+LINEBREAK+"TRY AGAIN", http.StatusNotFound)
-			return errors.New("OPS 3x")
+			return errors.New("")
 		}
 		//Reading the response (body)
 		body, errRead := io.ReadAll(res.Body)
 		if errRead != nil {
-			http.Error(w, errRead.Error(), http.StatusInternalServerError)
-			return errors.New("OPS 4x")
+			http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+			return errors.New("")
 		}
 
 		//Closing the response body to avoid memory leaks.
@@ -134,14 +134,14 @@ func GetCountry(w http.ResponseWriter, r *http.Request, iso string, c *GETCountr
 		var countryData []GETCountryInfo
 		errJSON := json.Unmarshal(body, &countryData)
 		if errJSON != nil {
-			http.Error(w, errJSON.Error(), http.StatusInternalServerError)
-			return errors.New("OPS 5x")
+			http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+			return errors.New("")
 		}
 
 		// Ensure that if we countryData is empty, we get a sad response and error.
 		if len(countryData) == 0 {
 			http.Error(w, "No country data found", http.StatusNotFound)
-			return errors.New("OPS 6x")
+			return errors.New("")
 		}
 
 		// Assign the first country from the array
@@ -166,8 +166,8 @@ func FetchCities(w http.ResponseWriter, _ *http.Request, c *GETCountryInfo, iso 
 	payloadData := map[string]string{"iso2": iso}
 	payloadBytes, err := json.Marshal(payloadData) //converting to JSON
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 
 	//Converting the payload to a readable format :D
@@ -180,8 +180,8 @@ func FetchCities(w http.ResponseWriter, _ *http.Request, c *GETCountryInfo, iso 
 	// Create a POST request to fetch cities
 	req, err := http.NewRequest("POST", citiesURL, payload)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 
 	//setting request headers
@@ -190,8 +190,8 @@ func FetchCities(w http.ResponseWriter, _ *http.Request, c *GETCountryInfo, iso 
 	//Execute the request
 	resp, err := client.Do(req)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 
 	defer func(Body io.ReadCloser) { //defer to make sure it closes when function ends
@@ -203,22 +203,22 @@ func FetchCities(w http.ResponseWriter, _ *http.Request, c *GETCountryInfo, iso 
 	// Check if API returned an error
 	if resp.StatusCode != http.StatusOK {
 		http.Error(w, fmt.Sprintf("API error: %s", resp.Status), resp.StatusCode)
-		return errors.New("OPS")
+		return errors.New("")
 	}
 
 	// Read the response
 	body, errRead := io.ReadAll(resp.Body)
 	if errRead != nil {
-		http.Error(w, errRead.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 
 	//Parse the JSON response
 	var temp JustCities
 	errJSONs := json.Unmarshal(body, &temp)
 	if errJSONs != nil {
-		http.Error(w, errJSONs.Error(), http.StatusInternalServerError)
-		return errors.New("OPS")
+		http.Error(w, "Internal Server Error :(", http.StatusInternalServerError)
+		return errors.New("")
 	}
 	//Sorting cities in alphabetically
 	sort.Strings(temp.Cities)
